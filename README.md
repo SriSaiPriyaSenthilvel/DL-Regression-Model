@@ -6,9 +6,6 @@ To develop a neural network regression model for the given dataset.
 ## THEORY
 Regression problems involve predicting a continuous output variable based on input features. Traditional linear regression models often struggle with complex patterns in data. Neural networks, specifically feedforward neural networks, can capture these complex relationships by using multiple layers of neurons and activation functions. In this experiment, a neural network model is introduced with a single linear layer that learns the parameters weight and bias using gradient descent.
 
-## Neural Network Model
-Include the neural network model diagram.
-
 ## DESIGN STEPS
 ### STEP 1: Generate Dataset
 
@@ -40,32 +37,93 @@ Use the trained model to predict  for a new input value .
 
 ## PROGRAM
 
-### Name:
+### Name: SRI SAI PRIYA S
 
-### Register Number:
-
-```python
-class Model(nn.Module):
-    def __init__(self, in_features, out_features):
-        super().__init__()
-        #Include your code here
-
-
-
-# Initialize the Model, Loss Function, and Optimizer
+### Register Number: 212222240103
 
 ```
 
-### Dataset Information
-Include screenshot of the generated data
+import torch
+import torch.nn as nn 
+import numpy as np
+import matplotlib.pyplot as plt  
+%matplotlib inline
+X = torch.linspace(1,70,70).reshape(-1,1)
+torch.manual_seed(59) # to obtain reproducible results
+e = torch.randint(-8,9,(70,1),dtype=torch.float)
 
+y = 2*X + 1 + e
+print(y.shape)
+plt.scatter(X.numpy(), y.numpy(),color='red')  
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Generated Data for Linear Regression')
+plt.show()
+torch.manual_seed(59)
+model = nn.Linear(1, 1)
+print('Weight:', model.weight.item())
+print('Bias:  ', model.bias.item())
+ 
+loss_function = nn.MSELoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)    
+
+epochs = 50  
+losses = []  
+
+for epoch in range(1, epochs + 1): 
+    optimizer.zero_grad()  
+    y_pred = model(X) 
+    loss = loss_function(y_pred, y)  
+    losses.append(loss.item()) 
+    loss.backward()  
+    optimizer.step()  
+
+    print(f'epoch: {epoch:2}  loss: {loss.item():10.8f}  '
+          f'weight: {model.weight.item():10.8f}  '
+          f'bias: {model.bias.item():10.8f}')
+plt.plot(range(epochs), losses)
+plt.ylabel('Loss')
+plt.xlabel('epoch');
+plt.show()
+x1 = torch.tensor([X.min().item(), X.max().item()])
+w1, b1 = model.weight.item(), model.bias.item()
+y1 = x1 * w1 + b1
+print(f'Final Weight: {w1:.8f}, Final Bias: {b1:.8f}')
+print(f'X range: {x1.numpy()}')
+print(f'Predicted Y values: {y1.numpy()}')
+plt.scatter(X.numpy(), y.numpy(), label="Original Data")
+plt.plot(x1.numpy(), y1.numpy(), 'r', label="Best-Fit Line")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Trained Model: Best-Fit Line')
+plt.legend()
+plt.show()    
+from google.colab import drive
+drive.mount('/content/drive')
+import torch
+import torch.nn as nn
+class MyModel(nn.Module):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.fc = nn.Linear(10, 2)
+
+    def forward(self, x):
+        return self.fc(x)
+
+model = MyModel()
+torch.save(model.state_dict(), '/content/drive/MyDrive/Sri Sai Priya S.pt')
+model = MyModel()  
+model.load_state_dict(torch.load('/content/drive/MyDrive/Sri Sai Priya S.pt'))
+model.eval()
+ 
+```
 ### OUTPUT
-Training Loss Vs Iteration Plot
-Best Fit line plot
-Include your plot here
 
-### New Sample Data Prediction
-Include your sample input and output here
+![image](https://github.com/user-attachments/assets/aae0cfe9-5ad0-4c8a-a7c4-e9b8c270bbfa)
+
+![image](https://github.com/user-attachments/assets/f587892b-d7d4-4a60-99c8-871f06cba1db)
+
+![image](https://github.com/user-attachments/assets/d5a6d154-b012-4693-8a88-526d0ff8588b)
 
 ## RESULT
 Thus, a neural network regression model was successfully developed and trained using PyTorch.
